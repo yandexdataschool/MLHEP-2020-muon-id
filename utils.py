@@ -36,28 +36,6 @@ N_FOI_FEATURES = N_STATIONS*FEATURES_PER_STATION
 # when computing FOI features
 EMPTY_FILLER = 1000
 
-# Examples on working with the provided files in different ways
-
-VERSION = "v2"
-# hdf is all fine - but it requires unpickling the numpy arrays
-# which is not guranteed
-def load_train_hdf(path):
-    return pd.concat([
-        pd.read_hdf(os.path.join(path, "train_part_%i_%s.hdf" % (i, VERSION)))
-        for i in (1, 2)], axis=0, ignore_index=True)
-
-
-def load_data_csv(path, feature_columns):
-    train = pd.concat([
-        pd.read_csv(os.path.join(path, "train_part_%i_%s.csv.gz" % (i, VERSION)),
-                    usecols= [ID_COLUMN] + feature_columns + TRAIN_COLUMNS,
-                    index_col=ID_COLUMN)
-        for i in (1, 2)], axis=0, ignore_index=True)
-    test = pd.read_csv(os.path.join(path, "test_public_%s.csv.gz" % VERSION),
-                       usecols=[ID_COLUMN] + feature_columns, index_col=ID_COLUMN)
-    return train, test
-
-
 def parse_array(line, dtype=np.float32):
     return np.fromstring(line[1:-1], sep=" ", dtype=dtype)
 
